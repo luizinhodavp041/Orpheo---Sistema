@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cadastro de Clientes - Serviços Digitais</title>
+    <title>Orpheo - Sistema de Gestão</title>
     <style>
+      /* ... estilos anteriores ... */
       * {
         margin: 0;
         padding: 0;
@@ -22,12 +23,28 @@
         margin: 0 auto;
       }
 
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 20px;
+        padding: 10px;
+      }
+
+      .logo {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+      }
+
       h1 {
         color: #333;
-        margin-bottom: 20px;
+        margin: 0;
         text-align: center;
       }
 
+      /* ... resto dos estilos anteriores ... */
       .form-container {
         background-color: white;
         padding: 20px;
@@ -62,7 +79,7 @@
       }
 
       button {
-        background-color: #4caf50;
+        background-color: #076aff;
         color: white;
         padding: 10px 20px;
         border: none;
@@ -118,8 +135,15 @@
   </head>
   <body>
     <div class="container">
-      <h1>Cadastro de Clientes</h1>
+      <div class="header">
+        <img id="logoImg" src="logo.png" alt="Logo da Empresa" class="logo" />
+        <h1>
+          Orpheo
+          <p>Sistema de Gestão</p>
+        </h1>
+      </div>
 
+      <!-- Resto do HTML continua igual... -->
       <div class="form-container">
         <form id="clientForm">
           <div class="form-group">
@@ -187,6 +211,7 @@
       </table>
     </div>
 
+    <!-- Script JavaScript continua igual... -->
     <script>
       let clients = [];
 
