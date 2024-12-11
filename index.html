@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Clientes - Serviços Digitais</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .form-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .button-container {
+        margin: 20px 0;
+        display: flex;
+        gap: 10px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .btn-secondary {
+        background-color: #6c757d;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+      }
+
+      .btn-delete {
+        background-color: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .btn-delete:hover {
+        background-color: #c82333;
+      }
+
+      #fileInput {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Cadastro de Clientes</h1>
+
+      <div class="form-container">
+        <form id="clientForm">
+          <div class="form-group">
+            <label for="nome">Nome da Empresa:</label>
+            <input type="text" id="nome" required />
+          </div>
+
+          <div class="form-group">
+            <label for="responsavel">Nome do Responsável:</label>
+            <input type="text" id="responsavel" required />
+          </div>
+
+          <div class="form-group">
+            <label for="telefone">Telefone:</label>
+            <input type="tel" id="telefone" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="instagram">Instagram:</label>
+            <input type="text" id="instagram" />
+          </div>
+
+          <div class="form-group">
+            <label for="observacoes">Observações:</label>
+            <textarea id="observacoes" rows="3"></textarea>
+          </div>
+
+          <button type="submit">Cadastrar Cliente</button>
+        </form>
+      </div>
+
+      <div class="button-container">
+        <input type="file" id="fileInput" accept=".csv" />
+        <button
+          onclick="document.getElementById('fileInput').click()"
+          class="btn-secondary"
+        >
+          Importar CSV
+        </button>
+        <button onclick="exportToCSV()" class="btn-secondary">
+          Exportar CSV
+        </button>
+      </div>
+
+      <table id="clientesTable">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>Responsável</th>
+            <th>Telefone</th>
+            <th>E-mail</th>
+            <th>Instagram</th>
+            <th>Observações</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Os clientes serão inseridos aqui via JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let clients = [];
+
+      // Manipular o envio do formulário
+      document.getElementById("clientForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const client = {
+          nome: document.getElementById("nome").value,
+          responsavel: document.getElementById("responsavel").value,
+          telefone: document.getElementById("telefone").value,
+          email: document.getElementById("email").value,
+          instagram: document.getElementById("instagram").value,
+          observacoes: document.getElementById("observacoes").value,
+        };
+
+        clients.push(client);
+        updateTable();
+        document.getElementById("clientForm").reset();
+      });
+
+      // Atualizar tabela
+      function updateTable() {
+        const tbody = document.querySelector("#clientesTable tbody");
+        tbody.innerHTML = "";
+
+        clients.forEach((client, index) => {
+          const row = tbody.insertRow();
+          row.innerHTML = `
+                    <td>${client.nome}</td>
+                    <td>${client.responsavel}</td>
+                    <td>${client.telefone}</td>
+                    <td>${client.email}</td>
+                    <td>${client.instagram}</td>
+                    <td>${client.observacoes}</td>
+                    <td>
+                        <button class="btn-delete" onclick="deleteClient(${index})">
+                            Excluir
+                        </button>
+                    </td>
+                `;
+        });
+      }
+
+      // Excluir cliente
+      function deleteClient(index) {
+        if (confirm("Tem certeza que deseja excluir este cliente?")) {
+          clients.splice(index, 1);
+          updateTable();
+        }
+      }
+
+      // Exportar para CSV
+      function exportToCSV() {
+        const headers = [
+          "Nome da Empresa",
+          "Responsável",
+          "Telefone",
+          "Email",
+          "Instagram",
+          "Observações",
+        ];
+        const csvRows = [headers];
+
+        clients.forEach((client) => {
+          const values = [
+            client.nome,
+            client.responsavel,
+            client.telefone,
+            client.email,
+            client.instagram,
+            client.observacoes,
+          ];
+          csvRows.push(values);
+        });
+
+        const csvContent = csvRows
+          .map((row) => row.map((cell) => `"${cell || ""}"`).join(","))
+          .join("\n");
+
+        const blob = new Blob(["\ufeff" + csvContent], {
+          type: "text/csv;charset=utf-8;",
+        });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+
+        link.setAttribute("href", url);
+        link.setAttribute("download", "clientes.csv");
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      // Importar do CSV
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+
+          reader.onload = function (event) {
+            const csvData = event.target.result;
+            const rows = csvData.split("\n");
+
+            // Pular a primeira linha (cabeçalho)
+            clients = rows
+              .slice(1)
+              .map((row) => {
+                const values = row
+                  .split(",")
+                  .map((value) => value.trim().replace(/(^"|"$)/g, ""));
+
+                return {
+                  nome: values[0],
+                  responsavel: values[1],
+                  telefone: values[2],
+                  email: values[3],
+                  instagram: values[4],
+                  observacoes: values[5],
+                };
+              })
+              .filter((client) => client.nome); // Remove linhas vazias
+
+            updateTable();
+          };
+
+          reader.readAsText(file);
+        });
+    </script>
+  </body>
+</html>
